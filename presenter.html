@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MASSH｜発表用の画面</title>
+  <meta name="theme-color" content="#083e50">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* 発表用：スマホとタブレットの画面を1つの画面に並べる */
+    body { background: var(--canal-deep); color: #fff; min-height: 100vh; }
+    .stage-head {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+      max-width: 1320px; margin: 0 auto; padding: 14px 20px 0;
+    }
+    .stage-title { display: flex; align-items: baseline; gap: 12px; }
+    .stage-title .brand-mark { color: #fff; }
+    .stage-title span:last-child { color: #b6d3dc; font-size: 14px; }
+    .stage-tools { display: flex; flex-wrap: wrap; align-items: end; gap: 10px; }
+    .stage-tools .field { color: #b6d3dc; }
+    .stage-tools .field select { height: 40px; }
+    .stage {
+      display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start;
+      gap: 28px; padding: 16px 20px 28px;
+    }
+    .device { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .device-label { font-size: 14px; font-weight: 700; color: #cfe3ea; }
+    .frame { background: #fff; border: 12px solid #061f28; overflow: hidden; box-shadow: 0 18px 40px rgba(0, 0, 0, .35); }
+    .phone { width: 390px; height: min(800px, calc(100vh - 120px)); min-height: 560px; border-radius: 40px; }
+    .tablet { width: min(820px, calc(100vw - 40px)); height: min(640px, calc(100vh - 120px)); min-height: 480px; border-radius: 24px; }
+    .frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+    @media (max-width: 460px) { .phone { width: calc(100vw - 24px); } }
+  </style>
+</head>
+<body>
+  <header class="stage-head">
+    <div class="stage-title"><span class="brand-mark">MASSH</span><span>発表用の画面</span></div>
+    <div class="stage-tools">
+      <label class="field">タブレットに出すお店<select id="shop"></select></label>
+      <a class="btn btn-ghost" href="demo.html">デモ操作</a>
+      <a class="btn btn-ghost" href="index.html">ふつうの画面にもどる</a>
+    </div>
+  </header>
+
+  <div class="stage">
+    <div class="device">
+      <span class="device-label">お客さんのスマホ</span>
+      <div class="frame phone"><iframe src="index.html" title="お客さんのスマホの画面"></iframe></div>
+    </div>
+    <div class="device">
+      <span class="device-label">お店のタブレット</span>
+      <div class="frame tablet"><iframe id="tablet" src="store.html?shop=unga" title="お店のタブレットの画面"></iframe></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { SHOPS } from "./js/data.js";
+    const select = document.getElementById("shop");
+    const tablet = document.getElementById("tablet");
+    select.innerHTML = SHOPS.filter((s) => s.source === "store")
+      .map((s) => `<option value="${s.id}"${s.id === "unga" ? " selected" : ""}>${s.name}（PIN ${s.pin}）</option>`)
+      .join("");
+    select.addEventListener("change", () => { tablet.src = `store.html?shop=${select.value}`; });
+  </script>
+</body>
+</html>
